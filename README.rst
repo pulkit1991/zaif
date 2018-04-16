@@ -1,9 +1,3 @@
-|licenseMIT| |pythonVersions|
-
-.. |licenseMIT| image:: https://camo.githubusercontent.com/3bb45cc5472ba89d623ca21cef715eec080a0ae1/68747470733a2f2f696d672e736869656c64732e696f2f61706d2f6c2f76696d2d6d6f64652e737667
-
-.. |pythonVersions| image:: https://img.shields.io/pypi/pyversions/coinbase.svg
-
 zaif
 ===================
 
@@ -53,7 +47,7 @@ Prerequisites
 
 The first thing you need to do is to `Sign Up with Zaif <https://zaif.jp>`_.
 
-Next, you need to obtain an **API Key** and an **API Secret**. If you're writing code for your own Zaif account, you can create API keys on `Zaif API Settings <https://zaif.jp/>`_ page. You can create multiple API keys with different permissions for your applications.
+Next, you need to obtain an **API Key** and an **API Secret**. If you're writing code for your own Zaif account, you can create API keys on `Zaif API Settings <https://zaif.jp/api_keys>`_ page. You can create multiple API keys with different permissions for your applications.
 
 NOTE: Make sure to enable appropriate permissions for the API key.
 
@@ -73,269 +67,280 @@ Create a ``Client`` object for interacting with the API:
 
 Error handling
 --------------
-All errors occurring during interaction with the API will be raised as exceptions. These exceptions will be subclasses of ``zaif.errors.ZaifError``. When the error involves an API request and/or response, the error will be a subclass of ``zaif.errors.APIServerError``, and include more information about the failed interaction. For full details of error responses, please refer to the `relevant API documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
+All errors occurring during interaction with the API will be raised as exceptions. These exceptions will be subclasses of ``zaif.errors.ZaifError``.
 
-+-------------------------+----------------------+
-|          Error          |    HTTP Status code  |
-+=========================+======================+
-| InvalidRequestError     |          400         |
-+-------------------------+----------------------+
-| AuthenticationError     |          401         |
-+-------------------------+----------------------+
-| TwoFactorRequiredError  |          402         |
-+-------------------------+----------------------+
-| InvalidScopeError       |          403         |
-+-------------------------+----------------------+
-| NotFoundError           |          404         |
-+-------------------------+----------------------+
-| ValidationError         |          422         |
-+-------------------------+----------------------+
-| RateLimitExceededError  |          429         |
-+-------------------------+----------------------+
-| InternalServerError     |          500         |
-+-------------------------+----------------------+
-| ServiceUnavailableError |          503         |
-+-------------------------+----------------------+
-| GatewayTimeoutError     |          504         |
-+-------------------------+----------------------+
+* When the error involves the API server, the error raised will be a subclass of ``zaif.errors.APIServerError``.
+* When the error is associated with response received form the API server, ``zaif.errors.APIResponseError`` will be raised.
+
+For full details of error responses, please refer to the `relevant API documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
+
++---------------------------+----------------------+
+| APIServerError subclass   |    HTTP Status code  |
++===========================+======================+
+| NotFoundError             |          404         |
++---------------------------+----------------------+
+| InternalServerError       |          500         |
++---------------------------+----------------------+
+| ServiceUnavailableError   |          503         |
++---------------------------+----------------------+
+| GatewayTimeoutError       |          504         |
++---------------------------+----------------------+
 
 Usage
 -------
 I've done my best to make the code clean, commented, and understandable; however it may not be exhaustive. For more details, please refer to the `Zaif API official documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
 
-**IN SHORT**
+**In short**
 
 - **Use args for URI paths**
 - **Use kwargs for formData or query parameters**
 
 
-**Public API (Market Data)**
+**PUBLIC API (Market Data)**
 
 Get available currencies, tokens, ICO etc.
 
 .. code:: python
 
-    client.get_currencies()
     client.get_currency('BTC')
+    client.get_currencies()
 
 
-Get currency symbols (currency pairs) traded on zaif exchange.
-
-.. code:: python
-
-    client.get_symbols()
-    client.get_symbol('ETHBTC')
-
-
-Get ticker information
+Get currency pairs traded on the exchange.
 
 .. code:: python
 
-    client.get_tickers()
-    client.get_ticker('ETHBTC')
+    client.get_currency_pair('eth_btc')
+    client.get_currency_pairs()
 
-
-Get trades for a specific symbol
-
-.. code:: python
-
-    client.get_trades('ETHBTC')
-    client.get_trades('ETHBTC',sort='ASC',limit=10)
-
-    # Caution: from is a python keyword,
-    # so cannot be used as a keyword argument to a function,
-    # need to use dict instead
-    import datetime
-    today = datetime.datetime.now()
-    yesterday = today - datetime.timedelta(days=1)
-    params = {
-        'from': today.isoformat(),
-        'to': yesterday.isoformat()
-    }
-    client.get_trades('ETHBTC',sort='ASC',limit=10,**params)
-
-
-Get orderbook (electronic list of buy and sell orders) for a specific symbol, organized by price level
+Get current closing price for a currency pair
 
 .. code:: python
 
-    client.get_orderbook('ETHBTC')
-    client.get_orderbook('ETHBTC',limit=10)
+    client.get_ticker('eth_btc')
 
 
-Get candles for a specific symbol (used for `OHLC <https://en.wikipedia.org/wiki/Open-high-low-close_chart>`_)
-
-.. code:: python
-
-    client.get_candles('ETHBTC')
-    client.get_candles('ETHBTC', limit=10, period='H1')
-
-
-**Trading**
-
-Get trading balance for your account
+Get ticker information for a currency pair
 
 .. code:: python
 
-    client.get_trading_balance()
+    client.get_ticker('eth_btc')
 
 
-Get a list of active orders or a specific active order
-
-.. code:: python
-
-    client.get_active_orders()
-    client.get_active_orders(symbol='ETHBTC')
-
-    client.get_active_order('840450210')
-    client.get_active_order('840450210', wait=30000)
-
-
-Create a new order
+Get trades for a currency pair
 
 .. code:: python
 
-    client.create_order(symbol='ETHBTC',side='buy',quantity='0.063',price='0.046016') # required parameters
-    client.create_order(symbol='ETHBTC',side='buy',quantity='0.063',price='0.046016', type='stopLimit', stopPrice='0.073')
+    client.get_trades('eth_btc')
 
 
-Update an existing order
-
-.. code:: python
-
-    client.update_order('840450210',symbol='ETHBTC',side='buy',quantity='0.063',price='0.046016',timeInForce='GDC')
-
-
-Cancel all open orders or a specific open order
+Get board information (asks, bids) for a currency pair
 
 .. code:: python
 
-    client.cancel_open_orders()
-    client.cancel_open_orders(symbol='ETHBTC')
-
-    client.cancel_order('840450210')
+    client.get_depth('eth_btc')
 
 
-Get personal trading commission rate
+**TRADING API**
 
-.. code:: python
-
-    client.get_trading_fee('ETHBTC')
-
-
-**Trading History**
-
-Get order history
+Get current balance (asset and token balances), API key permissions, number of past trades, number of open orders, server timestamp.
 
 .. code:: python
 
-    client.get_order_history()
-    client.get_order_history(symbol='ETHBTC',limit=10)
+    client.get_info()
 
-    # Caution: from is a python keyword,
-    # so cannot be used as a keyword argument to a function,
-    # need to use dict instead
-    import datetime
-    today = datetime.datetime.now()
-    yesterday = today - datetime.timedelta(days=1)
-    params = {
-        'from': today.isoformat(),
-        'to': yesterday.isoformat()
-    }
-    client.get_order_history(symbol='ETHBTC',limit=10,**params)
+It is a lightweight version of ``get_info()`` and returns items excluding past trades
+
+.. code:: python
+
+    client.get_info2()
+
+Get nickname and icon image path for your account
+
+.. code:: python
+
+    client.get_personal_info()
+
+Get account information such as user ID, email, etc.
+
+.. code:: python
+
+    client.get_id_info()
 
 Get trade history
 
 .. code:: python
 
     client.get_trade_history()
-    client.get_trade_history(symbol='ETHBTC',limit=10)
-
-    # Caution: from is a python keyword,
-    # so cannot be used as a keyword argument to a function,
-    # need to use dict instead
-    import datetime
-    today = datetime.datetime.now()
-    yesterday = today - datetime.timedelta(days=1)
-    params = {
-        'from': today.isoformat(),
-        'to': yesterday.isoformat()
-    }
-    client.get_trade_history(symbol='ETHBTC',limit=10,**params)
 
 
-Get trades by order
+Get a list of active orders (currency pairs and tokens)
 
 .. code:: python
 
-    client.get_trades_by_orderid('840450210')
+    client.get_active_orders(currency_pair='eth_btc')
 
-**Account Information**
 
-Get account balance
-
-.. code:: python
-
-    client.get_account_balance()
-
-Get deposit address for the cryptocurrency
+Create a new trading order
 
 .. code:: python
 
-    client.get_deposit_address('BTC')
+    client.trade(currency_pair='eth_btc',
+                action='bid',
+                price=100,
+                amount=1.5)
 
-Add deposit address for the cryptocurrency
 
-.. code:: python
-
-    client.add_deposit_address('BTC')
-
-Withdraw cryptocurrency
+Convenient function to create a buy order
 
 .. code:: python
 
-    client.withdraw('BTC', amount='0.01', address='sOmE-cuRR-encY-addR-essH') # required parameters
-    client.withdraw('BTC', amount='0.01', address='sOmE-cuRR-encY-addR-essH', networkFee='0.0003', includeFee=True, autoCommit=False)
+    client.buy(currency_pair='eth_btc',price=100,amount=1.5)
 
-
-Commit cryptocurrency withdrawal
+Convenient function to create a sell order
 
 .. code:: python
 
-    client.commit_withdrawal('d2ce578f-647d-4fa0-b1aa-4a27e5ee597b')
+    client.sell(currency_pair='eth_btc',price=100,amount=1.5)
 
-Rollback cryptocurrency withdrawal
 
-.. code:: python
-
-    client.rollback_withdrawal('d2ce578f-647d-4fa0-b1aa-4a27e5ee597b')
-
-Transfer money between trading and account
+Cancel an open order
 
 .. code:: python
 
-    client.transfer_to_trading(currency='BTC',amount='0.023',type='bankToExchange')
+    client.cancel_order(order_id=123)
 
-Get all transactions or by id
+
+Withdraw currency to a specific address
 
 .. code:: python
 
-    client.get_account_transactions()
-    client.get_account_transactions(currency='BTC',sort='ASC',limit=10)
+    client.withdraw(currency='ETH',address='0x1234abcd5678efgh',amount=1)
 
-    # Caution: from is a python keyword,
-    # so cannot be used as a keyword argument to a function,
-    # need to use dict instead
-    import datetime
-    today = datetime.datetime.now()
-    yesterday = today - datetime.timedelta(days=1)
-    params = {
-        'from': today.isoformat(),
-        'to': yesterday.isoformat()
-    }
-    client.get_trade_history(currency='BTC',sort='ASC',limit=10,**params)
 
-    client.get_account_transaction('d2ce578f-647d-4fa0-b1aa-4a27e5ee597b')
+Get deposit payments (account funding) history for a currency
+
+.. code:: python
+
+    client.get_deposit_history(currency='BTC')
+
+Get history of withdrawals for a currency
+
+.. code:: python
+
+    client.get_withdraw_history(currency='BTC')
+
+
+**FUTURES API**
+
+Get information on futures transactions
+
+.. code:: python
+
+    client.get_groups()
+
+Get information on a specific futures transaction
+
+.. code:: python
+
+    client.get_group(2)
+
+
+Get last on a specific futures transaction
+
+.. code:: python
+
+    client.get_group_last_price(2)
+
+
+Get ticker for a futures transaction
+
+.. code:: python
+
+    client.get_group_ticker(2)
+
+Get all trades of a futures transaction
+
+.. code:: python
+
+    client.get_group_trades(2)
+
+Get board information of a futures transaction
+
+.. code:: python
+
+    client.get_group_depth(2)
+
+
+**LEVERAGE API**
+
+Get history of your leveraged trades
+
+.. code:: python
+
+    client.get_positions(type='futures',group_id=1)
+
+Get detailed history of your leveraged trades
+
+.. code:: python
+
+    client.get_positions(type='futures',group_id=1,leverage_id=123)
+
+Get currently valid order list of leveraged transactions
+
+.. code:: python
+
+    client.get_active_positions(type='futures',group_id=1)
+
+Create a new leveraged transaction
+
+.. code:: python
+
+    client.create_position(type='futures',
+                            group_id=1,
+                            currency_pair='eth_btc',
+                            action='ask',
+                            price=100.0,
+                            amount=1,
+                            leverage=3.25)
+
+
+
+Convenient method to create a new leveraged buy transaction
+
+.. code:: python
+
+    client.create_buy_position(type='futures',
+                                group_id=1,
+                                currency_pair='eth_btc',
+                                price=100.0,
+                                amount=1,
+                                leverage=3.25)
+
+Convenient method to create a new leveraged sell transaction
+
+.. code:: python
+
+    client.create_sell_position(type='futures',
+                                group_id=1,
+                                currency_pair='eth_btc',
+                                price=100.0,
+                                amount=1,
+                                leverage=3.25)
+
+
+Modify a leveraged transaction
+
+.. code:: python
+
+    client.change_position(type='margin',group_id=1,leverage_id=123)
+
+Cancel a leveraged transaction
+
+.. code:: python
+
+    client.cancel_position(type='margin',group_id=1,leverage_id=123)
+
 
 
 Testing / Contributing
