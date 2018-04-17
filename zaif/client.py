@@ -36,10 +36,9 @@ class Client(object):
         self.BASE_API_URI = check_uri_security(base_api_uri or self.BASE_API_URI)
         self._api_uri = ApiUri(key,secret,self.BASE_API_URI)
 
-
     def _handle_response(self,response):
         """
-        Internal helper for handling API responses from the Zaif server. Raises the appropriate server errors when response is not 200; otherwise, parses the response data.
+        Internal helper for handling API responses from the Zaif server. Raises the appropriate server errors when response is not 200; otherwise, parses the response.
         """
         if response.status_code != 200:
             raise api_server_error(response)
@@ -47,8 +46,8 @@ class Client(object):
 
     def _parse_response(self,response):
         """
-        Returns the json data in case of PUBLIC API and FUTURES API reponses (non-dict data).
-        For TRADING API and LEVERAGE API, returns the json data if the response is a success, otherwise raises the errors included in the response.
+        Returns the json data in case of PUBLIC API and FUTURES API reponses.
+        For TRADING API and LEVERAGE API, returns the json data if the response is a success, otherwise raises APIResponseError.
         """
         response_json = response.json()
         if isinstance(response_json,dict):
@@ -71,22 +70,25 @@ class Client(object):
     #   PUBLIC API
     # --------------------
     def _public(self,*dirs):
+        """
+        Helper method to execute get request to public API URI
+        """
         return self._api_uri.get('api','1',*dirs)
-
-    def get_currency(self,currency):
-        response = self._public('currencies',currency)
-        return self._handle_response(response)
 
     def get_currencies(self):
         response = self._public('currencies','all')
         return self._handle_response(response)
 
-    def get_currency_pair(self,currency_pair):
-        response = self._public('currency_pairs',currency_pair)
+    def get_currency(self,currency):
+        response = self._public('currencies',currency)
         return self._handle_response(response)
 
     def get_currency_pairs(self):
         response = self._public('currency_pairs','all')
+        return self._handle_response(response)
+
+    def get_currency_pair(self,currency_pair):
+        response = self._public('currency_pairs',currency_pair)
         return self._handle_response(response)
 
     def get_last_price(self,currency_pair):
@@ -109,6 +111,9 @@ class Client(object):
     #   TRADING API
     # --------------------
     def _trading(self,func_name,**params):
+        """
+        Helper method to execute post request to trading API URI
+        """
         return self._api_uri.post(func_name,'tapi',**params)
 
     def get_info(self):
@@ -176,14 +181,17 @@ class Client(object):
     #   FUTURES API
     # --------------------
     def _futures(self,*dirs):
+        """
+        Helper method to execute get request to futures API URI
+        """
         return self._api_uri.get('fapi','1',*dirs)
-
-    def get_group(self,group_id):
-        response = self._futures('groups',group_id)
-        return self._handle_response(response)
 
     def get_groups(self):
         response = self._futures('groups','all')
+        return self._handle_response(response)
+
+    def get_group(self,group_id):
+        response = self._futures('groups',group_id)
         return self._handle_response(response)
 
     def get_group_last_price(self,group_id,currency_pair):
@@ -206,6 +214,9 @@ class Client(object):
     #   LEVERAGE API
     # --------------------
     def _leverage(self,func_name,**params):
+        """
+        Helper method to execute post request to leverage API URI
+        """
         return self._api_uri.post(func_name,'tlapi',**params)
 
     def get_positions(self,**params):
