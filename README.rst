@@ -2,6 +2,7 @@ zaif
 ===================
 
 REST API Client for Zaif Exchange
+Zaif Exchange用のREST APIクライアント
 
 |logo|
 
@@ -10,14 +11,15 @@ REST API Client for Zaif Exchange
 Features
 =========
 
-- A single client to call any type of API (public, trading, futures, leveraged)
-- Convenient methods for making API calls using keyword arguments - packs JSON for you!
-- Near 100% test coverage.
-- Tab-completable methods and attributes when using `IPython <http://ipython.org/>`_.
-- Supports both Python 2 and Python 3
+- A single client to call any type of API (public, trading, futures, leveraged). 任意の種類のAPI（公開、取引、先物、レバレッジド）を呼び出す単一のクライアント。
+- Convenient methods for making API calls using keyword arguments - packs JSON for you! キーワード引数を使用してAPIコールを作成するための便利なメソッド - JSONをパック！
+- Near 100% test coverage. 100％近いテストカバレッジ。
+- Tab-completable methods and attributes when using `IPython <http://ipython.org/>`_. `IPython <http://ipython.org/>` _を使用した場合のタブで完成可能なメソッドと属性。
+- Supports both Python 2 and Python 3. Python 2とPython 3の両方をサポートします。
 
-Installation
-=============
+
+Installation (インストール)
+==============================
 
 ``zaif`` is available on `PYPI <https://pypi.python.org/pypi>`_. Install with ``pip``:
 
@@ -33,14 +35,14 @@ or with ``easy_install``:
 
 The library is currently tested against Python versions 2.7 and 3.4+.
 
-API Reference
-===============
+API Reference (APIリファレンス)
+=================================
 
 The official documentation can be found on the `Zaif API reference page <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
+公式のドキュメントは `Zaif APIのリファレンスページ<http://techbureau-api-document.readthedocs.io/ja/latest/index.html>` _にあります。
 
-
-Prerequisites
-===============
+Prerequisites (前提条件)
+==============================
 
 The first thing you need to do is to `Sign Up with Zaif <https://zaif.jp>`_.
 
@@ -48,10 +50,11 @@ Next, you need to obtain an **API Key** and an **API Secret**. If you're writing
 
 NOTE: Make sure to enable appropriate permissions for the API key.
 
-Getting started
-=================
+Getting started (始める)
+=============================
 
 Create a ``Client`` object for interacting with the API:
+APIと対話するための `` Client``オブジェクトを作成します：
 
 .. code:: python
 
@@ -62,12 +65,12 @@ Create a ``Client`` object for interacting with the API:
 
     client = Client(api_key,api_secret)
 
-Error handling
---------------
+Error handling (エラー処理)
+---------------------------------
 All errors occurring during interaction with the API will be raised as exceptions. These exceptions will be subclasses of ``zaif.errors.ZaifError``.
 
-* When the error involves the API server, the error raised will be a subclass of ``zaif.errors.APIServerError``.
-* When the error is associated with response received form the API server, ``zaif.errors.APIResponseError`` will be raised.
+* When the error involves the API server, the error raised will be a subclass of ``zaif.errors.APIServerError``. エラーがAPIサーバに関係する場合、発生したエラーは `` zaif.errors.APIServerError``のサブクラスになります。
+* When the error is associated with the response received form the API server, ``zaif.errors.APIResponseError`` will be raised. エラーがAPIサーバーから受信したレスポンスに関連付けられている場合、「zaif.errors.API Response Error」が発生します。
 
 For full details of error responses, please refer to the `relevant API documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
 
@@ -83,8 +86,8 @@ For full details of error responses, please refer to the `relevant API documenta
 | GatewayTimeoutError       |          504         |
 +---------------------------+----------------------+
 
-Usage
--------
+Usage (使い方)
+-------------------
 I've done my best to make the code clean, commented, and understandable; however it may not be exhaustive. For more details, please refer to the `Zaif API official documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
 
 **In short**
@@ -93,9 +96,10 @@ I've done my best to make the code clean, commented, and understandable; however
 - **Use kwargs for formData or query parameters**
 
 
-**PUBLIC API (Market Data)**
+**PUBLIC API (現物公開API)**
 
 Get available currencies, tokens, ICO etc.
+通貨情報を取得します。
 
 .. code:: python
 
@@ -104,67 +108,77 @@ Get available currencies, tokens, ICO etc.
 
 
 Get currency pairs traded on the exchange.
+通貨ペア情報を取得します。
 
 .. code:: python
 
     client.get_currency_pairs()
     client.get_currency_pair('eth_btc')
 
-Get current closing price for a currency pair
+Get current closing price for a currency pair.
+現在の終値を取得します。
+
+.. code:: python
+
+    client.get_last_price('eth_btc')
+
+
+Get ticker information for a currency pair.
+ティッカーを取得します。
 
 .. code:: python
 
     client.get_ticker('eth_btc')
 
 
-Get ticker information for a currency pair
-
-.. code:: python
-
-    client.get_ticker('eth_btc')
-
-
-Get trades for a currency pair
+Get trades for a currency pair.
+全ての取引履歴を取得します。
 
 .. code:: python
 
     client.get_trades('eth_btc')
 
 
-Get board information (asks, bids) for a currency pair
+Get board information (asks, bids) for a currency pair.
+板情報を取得します。
 
 .. code:: python
 
     client.get_depth('eth_btc')
 
 
-**TRADING API**
+**TRADING API (現物取引API)**
 
 Get current balance (asset and token balances), API key permissions, number of past trades, number of open orders, server timestamp.
+現在の残高（余力および残高・トークン）、APIキーの権限、過去のトレード数、アクティブな注文数、サーバーのタイムスタンプを取得します。
 
 .. code:: python
 
     client.get_info()
 
-It is a lightweight version of ``get_info()`` and returns items excluding past trades
+It is a lightweight version of ``get_info()`` and returns items excluding past trades.
+get_infoの軽量版で、過去のトレード数を除く項目を返します。
 
 .. code:: python
 
     client.get_info2()
 
-Get nickname and icon image path for your account
+Get nickname and icon image path for your account.
+チャットに使用されるニックネームと画像のパスを返します。
 
 .. code:: python
 
     client.get_personal_info()
 
 Get account information such as user ID, email, etc.
+ユーザーIDやメールアドレスといった個人情報を取得します。
 
 .. code:: python
 
     client.get_id_info()
 
-Get trade history
+Get trade history.
+ユーザー自身の取引履歴を取得します。
 
 .. code:: python
 
@@ -172,7 +186,8 @@ Get trade history
     client.get_trade_history(currency_pair='eth_btc',count=10,order='ASC')
 
 
-Get a list of active orders (currency pairs and tokens)
+Get a list of active orders (currency pairs and tokens).
+現在有効な注文一覧を取得します（未約定注文一覧）。
 
 .. code:: python
 
@@ -181,7 +196,8 @@ Get a list of active orders (currency pairs and tokens)
     client.get_active_orders(is_token_both=True)
 
 
-Create a new trading order
+Create a new trading order.
+取引注文を行います。
 
 .. code:: python
 
@@ -198,14 +214,14 @@ Create a new trading order
 
 
 
-Convenient function to create a buy order
+Convenient function to create a buy order.
 
 .. code:: python
 
     client.buy(currency_pair='eth_btc',price=100,amount=1.5)
     client.buy(currency_pair='eth_btc',price=100,amount=1.5,limit=120)
 
-Convenient function to create a sell order
+Convenient function to create a sell order.
 
 .. code:: python
 
@@ -213,7 +229,8 @@ Convenient function to create a sell order
     client.sell(currency_pair='eth_btc',price=100,amount=1.5,limit=120)
 
 
-Cancel an open order
+Cancel an open order.
+注文の取消しを行います。
 
 .. code:: python
 
@@ -221,14 +238,16 @@ Cancel an open order
     client.cancel_order(order_id=123,currency_pair='eth_btc')
 
 
-Withdraw currency to a specific address
+Withdraw currency to a specific address.
+資金の引き出しリクエストを送信します。
 
 .. code:: python
 
     client.withdraw(currency='ETH',address='0x1234abcd5678efgh',amount=1)
 
 
-Get deposit payments (account funding) history for a currency
+Get deposit payments (account funding) history for a currency.
+入金履歴を取得します。
 
 .. code:: python
 
@@ -236,7 +255,8 @@ Get deposit payments (account funding) history for a currency
     client.get_deposit_history(currency='BTC',count=50,order='ASC')
 
 
-Get history of withdrawals for a currency
+Get history of withdrawals for a currency.
+出金履歴を取得します。
 
 .. code:: python
 
@@ -244,50 +264,57 @@ Get history of withdrawals for a currency
     client.get_withdraw_history(currency='BTC',count=50,sort='ASC')
 
 
-**FUTURES API**
+**FUTURES API (先物公開API)**
 
-Get information on futures transactions
+Get information on all futures groups.
+先物取引の情報を取得します。
 
 .. code:: python
 
     client.get_groups()
 
-Get information on a specific futures transaction
+Get information on a specific futures group
 
 .. code:: python
 
     client.get_group(2)
 
 
-Get last on a specific futures transaction
+Get current closing price of a specific futures group.
+現在の終値を取得します。
 
 .. code:: python
 
     client.get_group_last_price(2)
 
 
-Get ticker for a futures transaction
+Get ticker for a futures group.
+ティッカーを取得します。
+
 
 .. code:: python
 
     client.get_group_ticker(2)
 
-Get all trades of a futures transaction
+Get all trades of a futures group.
+全ての取引履歴を取得します。
 
 .. code:: python
 
     client.get_group_trades(2)
 
-Get board information of a futures transaction
+Get board information of a futures transaction.
+板情報を取得します。
 
 .. code:: python
 
     client.get_group_depth(2)
 
 
-**LEVERAGE API**
+**LEVERAGE API (レバレッジ取引API)**
 
-Get history of your leveraged trades
+Get history of your leveraged trades.
+レバレッジ取引のユーザー自身の取引履歴を取得します。
 
 .. code:: python
 
@@ -299,13 +326,15 @@ Get history of your leveraged trades
                          currency_pair='eth_btc')
 
 
-Get detailed history of your leveraged trades
+Get detailed history of your leveraged trades.
+レバレッジ取引のユーザー自身の取引履歴の明細を取得します。
 
 .. code:: python
 
     client.get_position_history(type='futures',group_id=1,leverage_id=123)
 
-Get currently valid order list of leveraged transactions
+Get currently valid order list of leveraged transactions.
+レバレッジ取引の現在有効な注文一覧を取得します（未約定注文一覧）。
 
 .. code:: python
 
@@ -313,7 +342,8 @@ Get currently valid order list of leveraged transactions
     client.get_active_positions(type='futures',group_id=1,currency_pair='eth_btc')
 
 
-Create a new leveraged transaction
+Create a new leveraged transaction.
+レバレッジ取引の注文を行います。
 
 .. code:: python
 
@@ -335,7 +365,7 @@ Create a new leveraged transaction
                            stop=90)
 
 
-Convenient method to create a new leveraged buy transaction
+Convenient method to create a new leveraged buy transaction.
 
 .. code:: python
 
@@ -346,14 +376,15 @@ Convenient method to create a new leveraged buy transaction
                                amount=1,
                                leverage=3.25)
     client.create_buy_position(type='futures',
-                               group_id=1,                            currency_pair='eth_btc',
+                               group_id=1,
+                               currency_pair='eth_btc',
                                price=100.0,
                                amount=1,
                                leverage=3.25,
                                limit=120,
                                stop=90)
 
-Convenient method to create a new leveraged sell transaction
+Convenient method to create a new leveraged sell transaction.
 
 .. code:: python
 
@@ -372,14 +403,17 @@ Convenient method to create a new leveraged sell transaction
                                 limit=120,
                                 stop=90)
 
-Modify a leveraged transaction
+Modify a leveraged transaction.
+レバレッジ取引の注文の変更を行います。
 
 .. code:: python
 
     client.change_position(type='margin',group_id=1,leverage_id=123)
     client.change_position(type='margin',group_id=1,leverage_id=123,limit=120)
 
-Cancel a leveraged transaction
+Cancel a leveraged transaction.
+レバレッジ取引の注文の取消しを行います。
+
 
 .. code:: python
 
@@ -387,8 +421,8 @@ Cancel a leveraged transaction
 
 
 
-Testing / Contributing
-=======================
+Testing / Contributing (テスト/寄稿)
+====================================
 Any contribution is welcome! The process is simple:
 
 * Fork this repo
@@ -397,8 +431,8 @@ Any contribution is welcome! The process is simple:
 * Submit a pull request.
 
 
-Testing for your current python version
-------------------------------------------
+Testing for your current python version (現在のPythonバージョン)
+---------------------------------------------------------------------
 
 Tests are run via `nosetest <https://nose.readthedocs.io/en/latest/>`_. To run the tests, clone the repository and then:
 
@@ -419,8 +453,8 @@ If you'd also like to generate an HTML coverage report (useful for figuring out 
     $ make coverage
 
 
-Testing for multiple python versions
-------------------------------------------
+Testing for multiple python versions (複数のPythonバージョン)
+-------------------------------------------------------------------
 
 I am using `tox <http://tox.readthedocs.io/en/latest/install.html>`_ to run the test suite against multiple versions of Python. Tox requires the appropriate Python interpreters to run the tests in different environments. I would recommend using `pyenv <https://github.com/pyenv/pyenv#installation>`_ for this.
 
@@ -459,12 +493,12 @@ and so forth. Now, in your project directory:
     $ tox
 
 
-License
-=========
+License (ライセンス)
+==========================
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
-Acknowledgements
-=================
+Acknowledgements (謝辞)
+=========================
 
 - `zaifapi <https://github.com/techbureau/zaifapi>`_
