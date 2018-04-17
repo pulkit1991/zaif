@@ -10,14 +10,11 @@ REST API Client for Zaif Exchange
 Features
 =========
 
-- Convenient methods for making API calls using keyword arguments
-
-    - Automatic classification into form-data or query parameters
-    - Automatic packing into JSON
-
+- A single client to call any type of API (public, trading, futures, leveraged)
+- Convenient methods for making API calls using keyword arguments - packs JSON for you!
 - Near 100% test coverage.
 - Tab-completable methods and attributes when using `IPython <http://ipython.org/>`_.
-
+- Supports both Python 2 and Python 3
 
 Installation
 =============
@@ -75,7 +72,7 @@ All errors occurring during interaction with the API will be raised as exception
 For full details of error responses, please refer to the `relevant API documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
 
 +---------------------------+----------------------+
-| APIServerError subclass   |    HTTP Status code  |
+|            Error          |   HTTP Status code   |
 +===========================+======================+
 | NotFoundError             |          404         |
 +---------------------------+----------------------+
@@ -102,16 +99,16 @@ Get available currencies, tokens, ICO etc.
 
 .. code:: python
 
-    client.get_currency('BTC')
     client.get_currencies()
+    client.get_currency('BTC')
 
 
 Get currency pairs traded on the exchange.
 
 .. code:: python
 
-    client.get_currency_pair('eth_btc')
     client.get_currency_pairs()
+    client.get_currency_pair('eth_btc')
 
 Get current closing price for a currency pair
 
@@ -186,9 +183,9 @@ Create a new trading order
 .. code:: python
 
     client.trade(currency_pair='eth_btc',
-                action='bid',
-                price=100,
-                amount=1.5)
+                 action='bid',
+                 price=100,
+                 amount=1.5)
 
 
 Convenient function to create a buy order
@@ -297,12 +294,12 @@ Create a new leveraged transaction
 .. code:: python
 
     client.create_position(type='futures',
-                            group_id=1,
-                            currency_pair='eth_btc',
-                            action='ask',
-                            price=100.0,
-                            amount=1,
-                            leverage=3.25)
+                           group_id=1,
+                           currency_pair='eth_btc',
+                           action='ask',
+                           price=100.0,
+                           amount=1,
+                           leverage=3.25)
 
 
 
@@ -311,11 +308,12 @@ Convenient method to create a new leveraged buy transaction
 .. code:: python
 
     client.create_buy_position(type='futures',
-                                group_id=1,
-                                currency_pair='eth_btc',
-                                price=100.0,
-                                amount=1,
-                                leverage=3.25)
+                               group_id=1,
+                               currency_pair='eth_btc',
+                               price=100.0,
+                               amount=1,
+                               leverage=3.25)
+
 
 Convenient method to create a new leveraged sell transaction
 
