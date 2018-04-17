@@ -169,13 +169,16 @@ Get trade history
 .. code:: python
 
     client.get_trade_history()
+    client.get_trade_history(currency_pair='eth_btc',count=10,order='ASC')
 
 
 Get a list of active orders (currency pairs and tokens)
 
 .. code:: python
 
+    client.get_active_orders()
     client.get_active_orders(currency_pair='eth_btc')
+    client.get_active_orders(is_token_both=True)
 
 
 Create a new trading order
@@ -187,18 +190,27 @@ Create a new trading order
                  price=100,
                  amount=1.5)
 
+    client.trade(currency_pair='eth_btc',
+                 action='bid',
+                 price=100,
+                 amount=1.5,
+                 limit=120)
+
+
 
 Convenient function to create a buy order
 
 .. code:: python
 
     client.buy(currency_pair='eth_btc',price=100,amount=1.5)
+    client.buy(currency_pair='eth_btc',price=100,amount=1.5,limit=120)
 
 Convenient function to create a sell order
 
 .. code:: python
 
     client.sell(currency_pair='eth_btc',price=100,amount=1.5)
+    client.sell(currency_pair='eth_btc',price=100,amount=1.5,limit=120)
 
 
 Cancel an open order
@@ -206,6 +218,7 @@ Cancel an open order
 .. code:: python
 
     client.cancel_order(order_id=123)
+    client.cancel_order(order_id=123,currency_pair='eth_btc')
 
 
 Withdraw currency to a specific address
@@ -220,12 +233,15 @@ Get deposit payments (account funding) history for a currency
 .. code:: python
 
     client.get_deposit_history(currency='BTC')
+    client.get_deposit_history(currency='BTC',count=50,order='ASC')
+
 
 Get history of withdrawals for a currency
 
 .. code:: python
 
     client.get_withdraw_history(currency='BTC')
+    client.get_withdraw_history(currency='BTC',count=50,sort='ASC')
 
 
 **FUTURES API**
@@ -276,18 +292,26 @@ Get history of your leveraged trades
 .. code:: python
 
     client.get_positions(type='futures',group_id=1)
+    client.get_positions(type='futures',
+                         group_id=1,
+                         count=10,
+                         order='ASC',
+                         currency_pair='eth_btc')
+
 
 Get detailed history of your leveraged trades
 
 .. code:: python
 
-    client.get_positions(type='futures',group_id=1,leverage_id=123)
+    client.get_position_history(type='futures',group_id=1,leverage_id=123)
 
 Get currently valid order list of leveraged transactions
 
 .. code:: python
 
     client.get_active_positions(type='futures',group_id=1)
+    client.get_active_positions(type='futures',group_id=1,currency_pair='eth_btc')
+
 
 Create a new leveraged transaction
 
@@ -300,7 +324,15 @@ Create a new leveraged transaction
                            price=100.0,
                            amount=1,
                            leverage=3.25)
-
+    client.create_position(type='futures',
+                           group_id=1,
+                           currency_pair='eth_btc',
+                           action='ask',
+                           price=100.0,
+                           amount=1,
+                           leverage=3.25,
+                           limit=120,
+                           stop=90)
 
 
 Convenient method to create a new leveraged buy transaction
@@ -313,7 +345,13 @@ Convenient method to create a new leveraged buy transaction
                                price=100.0,
                                amount=1,
                                leverage=3.25)
-
+    client.create_buy_position(type='futures',
+                               group_id=1,                            currency_pair='eth_btc',
+                               price=100.0,
+                               amount=1,
+                               leverage=3.25,
+                               limit=120,
+                               stop=90)
 
 Convenient method to create a new leveraged sell transaction
 
@@ -325,13 +363,21 @@ Convenient method to create a new leveraged sell transaction
                                 price=100.0,
                                 amount=1,
                                 leverage=3.25)
-
+    client.create_sell_position(type='futures',
+                                group_id=1,
+                                currency_pair='eth_btc',
+                                price=100.0,
+                                amount=1,
+                                leverage=3.25,
+                                limit=120,
+                                stop=90)
 
 Modify a leveraged transaction
 
 .. code:: python
 
     client.change_position(type='margin',group_id=1,leverage_id=123)
+    client.change_position(type='margin',group_id=1,leverage_id=123,limit=120)
 
 Cancel a leveraged transaction
 
