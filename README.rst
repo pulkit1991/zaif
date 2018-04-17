@@ -14,7 +14,7 @@ Features
 - A single client to call any type of API (public, trading, futures, leveraged). 任意の種類のAPI（公開、取引、先物、レバレッジド）を呼び出す単一のクライアント。
 - Convenient methods for making API calls using keyword arguments - packs JSON for you! キーワード引数を使用してAPIコールを作成するための便利なメソッド - JSONをパック！
 - Near 100% test coverage. 100％近いテストカバレッジ。
-- Tab-completable methods and attributes when using `IPython <http://ipython.org/>`_. `IPython <http://ipython.org/>` _を使用した場合のタブで完成可能なメソッドと属性。
+- Tab-completable methods and attributes when using `IPython <http://ipython.org/>`_. `IPython <http://ipython.org/>`_ を使用した場合のタブで完成可能なメソッドと属性。
 - Supports both Python 2 and Python 3. Python 2とPython 3の両方をサポートします。
 
 
@@ -39,7 +39,7 @@ API Reference (APIリファレンス)
 =================================
 
 The official documentation can be found on the `Zaif API reference page <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
-公式のドキュメントは `Zaif APIのリファレンスページ<http://techbureau-api-document.readthedocs.io/ja/latest/index.html>` _にあります。
+公式のドキュメントは `Zaif APIのリファレンスページ <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_ にあります。
 
 Prerequisites (前提条件)
 ==============================
@@ -54,7 +54,7 @@ Getting started (始める)
 =============================
 
 Create a ``Client`` object for interacting with the API:
-APIと対話するための `` Client``オブジェクトを作成します：
+APIと対話するための ``Client`` オブジェクトを作成します：
 
 .. code:: python
 
@@ -69,8 +69,8 @@ Error handling (エラー処理)
 ---------------------------------
 All errors occurring during interaction with the API will be raised as exceptions. These exceptions will be subclasses of ``zaif.errors.ZaifError``.
 
-* When the error involves the API server, the error raised will be a subclass of ``zaif.errors.APIServerError``. エラーがAPIサーバに関係する場合、発生したエラーは `` zaif.errors.APIServerError``のサブクラスになります。
-* When the error is associated with the response received form the API server, ``zaif.errors.APIResponseError`` will be raised. エラーがAPIサーバーから受信したレスポンスに関連付けられている場合、「zaif.errors.API Response Error」が発生します。
+* When the error involves the API server, the error raised will be a subclass of ``zaif.errors.APIServerError``. エラーがAPIサーバに関係する場合、発生したエラーは ``zaif.errors.APIServerError`` のサブクラスになります。
+* When the error is associated with the response received form the API server, ``zaif.errors.APIResponseError`` will be raised. エラーがAPIサーバーから受信したレスポンスに関連付けられている場合、``zaif.errors.APIResponseError`` が発生します。
 
 For full details of error responses, please refer to the `relevant API documentation <http://techbureau-api-document.readthedocs.io/ja/latest/index.html>`_.
 
