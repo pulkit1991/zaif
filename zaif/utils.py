@@ -30,6 +30,9 @@ def method_name():
 
 
 def get_nonce():
+    """
+    Returns nonce for use in POST data
+    """
     now = datetime.now()
     nonce = str(int(time.mktime(now.timetuple())))
     microseconds = '{0:06d}'.format(now.microsecond)
