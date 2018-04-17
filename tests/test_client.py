@@ -131,14 +131,6 @@ class TestClient(unittest2.TestCase):
         hp.reset()
 
     @hp.activate
-    def test_get_currency(self):
-        mock_response = {'body':json.dumps(mock_collection)}
-        hp.register_uri(hp.GET,re.compile('.*api/1/currencies/foo$'),**mock_response)
-        client = Client(api_key,api_secret)
-        self.assertEqual(client.get_currency('foo'),mock_collection)
-        hp.reset()
-
-    @hp.activate
     def test_get_currencies(self):
         mock_response = {'body':json.dumps(mock_collection)}
         hp.register_uri(hp.GET,re.compile('.*api/1/currencies/all$'),**mock_response)
@@ -147,11 +139,11 @@ class TestClient(unittest2.TestCase):
         hp.reset()
 
     @hp.activate
-    def test_get_currency_pair(self):
+    def test_get_currency(self):
         mock_response = {'body':json.dumps(mock_collection)}
-        hp.register_uri(hp.GET,re.compile('.*api/1/currency_pairs/foo$'),**mock_response)
+        hp.register_uri(hp.GET,re.compile('.*api/1/currencies/foo$'),**mock_response)
         client = Client(api_key,api_secret)
-        self.assertEqual(client.get_currency_pair('foo'),mock_collection)
+        self.assertEqual(client.get_currency('foo'),mock_collection)
         hp.reset()
 
     @hp.activate
@@ -160,6 +152,14 @@ class TestClient(unittest2.TestCase):
         hp.register_uri(hp.GET,re.compile('.*api/1/currency_pairs/all$'),**mock_response)
         client = Client(api_key,api_secret)
         self.assertEqual(client.get_currency_pairs(),mock_collection)
+        hp.reset()
+
+    @hp.activate
+    def test_get_currency_pair(self):
+        mock_response = {'body':json.dumps(mock_collection)}
+        hp.register_uri(hp.GET,re.compile('.*api/1/currency_pairs/foo$'),**mock_response)
+        client = Client(api_key,api_secret)
+        self.assertEqual(client.get_currency_pair('foo'),mock_collection)
         hp.reset()
 
     @hp.activate
@@ -403,19 +403,19 @@ class TestClient(unittest2.TestCase):
         hp.reset()
 
     @hp.activate
-    def test_get_group(self):
-        mock_response = {'body':json.dumps(mock_collection)}
-        hp.register_uri(hp.GET,re.compile('.*fapi/1/groups/foo$'),**mock_response)
-        client = Client(api_key,api_secret)
-        self.assertEqual(client.get_group('foo'),mock_collection)
-        hp.reset()
-
-    @hp.activate
     def test_get_groups(self):
         mock_response = {'body':json.dumps(mock_collection)}
         hp.register_uri(hp.GET,re.compile('.*fapi/1/groups/all$'),**mock_response)
         client = Client(api_key,api_secret)
         self.assertEqual(client.get_groups(),mock_collection)
+        hp.reset()
+
+    @hp.activate
+    def test_get_group(self):
+        mock_response = {'body':json.dumps(mock_collection)}
+        hp.register_uri(hp.GET,re.compile('.*fapi/1/groups/foo$'),**mock_response)
+        client = Client(api_key,api_secret)
+        self.assertEqual(client.get_group('foo'),mock_collection)
         hp.reset()
 
     @hp.activate
