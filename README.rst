@@ -2,6 +2,7 @@ zaif
 ===================
 
 REST API Client for Zaif Exchange
+
 Zaif Exchange用のREST APIクライアント
 
 |logo|
@@ -104,8 +105,8 @@ Get available currencies, tokens, ICO etc.
 .. code:: python
 
     client.get_currencies()
-    client.get_currency('BTC')
-
+    client.get_currency('btc')
+    client.get_currency('ETH') # capital for token currencies
 
 Get currency pairs traded on the exchange.
 通貨ペア情報を取得します。
@@ -251,8 +252,8 @@ Get deposit payments (account funding) history for a currency.
 
 .. code:: python
 
-    client.get_deposit_history(currency='BTC')
-    client.get_deposit_history(currency='BTC',count=50,order='ASC')
+    client.get_deposit_history(currency='btc')
+    client.get_deposit_history(currency='ETH',count=50,order='ASC')
 
 
 Get history of withdrawals for a currency.
@@ -260,8 +261,8 @@ Get history of withdrawals for a currency.
 
 .. code:: python
 
-    client.get_withdraw_history(currency='BTC')
-    client.get_withdraw_history(currency='BTC',count=50,sort='ASC')
+    client.get_withdraw_history(currency='btc')
+    client.get_withdraw_history(currency='ETH',count=50,sort='ASC')
 
 
 **FUTURES API (先物公開API)**
