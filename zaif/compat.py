@@ -5,7 +5,7 @@ if six.PY2:
     from itertools import imap
     from urllib import quote
     from urlparse import urlparse
-    from urlparse import urlencode
+    from urllib import urlencode
 
 elif six.PY3:
     imap = map
